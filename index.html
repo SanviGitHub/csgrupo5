@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoVida - Consumo Responsable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --main-green: #2e7d32;
+            --light-green: #66bb6a;
+            --orange-cta: #ff9800;
+            --glow-effect: rgba(102, 187, 106, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f9; 
+            color: #1f2937; 
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out, background-color 0.4s, color 0.4s;
+        }
+
+        .dark body {
+            background-color: #0d1117;
+            color: #f4f4f9;
+        }
+        
+        body.loading {
+            overflow: hidden;
+        }
+        
+        header.scrolled {
+            background-color: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        #sanvy-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000; 
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #sanvy-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #sanvy-loader h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fade-in-out 2s ease-in-out forwards;
+        }
+
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.95); }
+        }
+        #eco-vida-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition-delay: 2s; 
+        }
+
+        #eco-vida-loader .loader-content {
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        #eco-vida-loader h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        
+        #eco-vida-loader h1 span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px) rotateX(-90deg);
+            animation: flip-in 0.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #eco-vida-loader h1 span.leaf {
+            color: var(--light-green);
+        }
+
+        #loader-subtitle {
+            font-size: 1.25rem;
+            color: #ccc;
+            opacity: 0;
+            animation: fade-in 1s forwards;
+            animation-delay: 1.2s;
+        }
+        
+        #eco-vida-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        @keyframes flip-in {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+        @keyframes fade-in {
+            to { opacity: 1; }
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dark .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px var(--glow-effect);
+        }
+
+        .dark .card:hover {
+             border-color: var(--light-green);
+        }
+
+        .bg-secondary-section {
+            background-color: #f9fafb;
+        }
+        .dark .bg-secondary-section {
+            background-color: #161b22;
+        }
+
+        .cta-button {
+            background-color: var(--orange-cta);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
+        }
+        
+        .cta-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(255,152,0,0.2), 0 0 5px rgba(255,152,0,0.1) inset; }
+            50% { box-shadow: 0 0 20px rgba(255,152,0,0.5), 0 0 10px rgba(255,152,0,0.3) inset; }
+            100% { box-shadow: 0 0 5px rgba(255,152,0,0.2), 0 0 5px rgba(255,152,0,0.1) inset; }
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            padding: 2rem;
+            border-radius: 1rem;
+            background: #28a745;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
+        }
+
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-divider {
+            margin: -1px 0;
+            width: 100%;
+            height: auto;
+            color: #161b22; 
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid #30363d;
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+        .dark .game-container {
+            background: #0d1117;
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1.5rem;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, var(--main-green), var(--light-green)) border-box;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) padding-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+        }
+
+
+        .faucet-cell {
+            background-color: #161b22;
+            border-radius: 0.5rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .faucet {
+            font-size: 2.5rem;
+            cursor: pointer;
+            animation: pop-in 0.3s ease;
+        }
+        .faucet.dripping::after {
+            content: '💧';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            animation: drip 1.2s infinite ease-in;
+        }
+        @keyframes pop-in {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes drip {
+            0% { transform: translateY(0) translateX(-50%); opacity: 1; }
+            100% { transform: translateY(25px) translateX(-50%); opacity: 0; }
+        }
+
+        #game-board {
+            width: 100%;
+            max-width: 295px; 
+            aspect-ratio: 1 / 1;
+        }
+        .hole {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23062e14"/></svg>');
+            background-size: 80%;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .pollutant {
+            font-size: 2.5rem;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: rise 0.3s ease-out;
+            user-select: none;
+        }
+        @keyframes rise {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .social-icons a {
+            transition: color 0.3s, transform 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--light-green);
+            transform: scale(1.2);
+        }
+
+    </style>
+</head>
+<body class="loading">
+    <div id="sanvy-loader">
+        <h1>Sanvy Corporation</h1>
+    </div>
+
+    <div id="eco-vida-loader" style="display: none;">
+        <div class="loader-content">
+            <h1 id="eco-vida-loader-title"></h1>
+            <p id="loader-subtitle">Cuidando nuestro futuro.</p>
+        </div>
+    </div>
+    
+    <div id="message-box" class="message-box text-center">
+        <p id="message-text" class="mb-4 text-lg font-semibold"></p>
+        <button onclick="hideMessage()" class="bg-gray-800 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">Entendido</button>
+    </div>
+
+    <header id="header" class="fixed top-0 left-0 w-full py-4 px-8 md:px-12 backdrop-blur-md bg-white/10 shadow-lg z-50 transition-colors duration-300">
+        <div class="flex justify-between items-center flex-wrap">
+            <a href="#inicio" class="text-2xl font-bold text-green-300 mr-4">EcoVida</a>
+            <nav class="w-full md:w-auto mt-2 md:mt-0">
+                <ul class="flex justify-center items-center flex-wrap text-sm gap-2 md:text-base md:gap-6">
+                    <li><a href="#energias" class="text-gray-800 dark:text-white hover:text-green-300 transition-colors">Energías</a></li>
+                    <li><a href="#contaminacion" class="text-gray-800 dark:text-white hover:text-green-300 transition-colors">Contaminación</a></li>
+                    <li><a href="#infraestructura" class="text-gray-800 dark:text-white hover:text-green-300 transition-colors">Infraestructura</a></li>
+                    <li><a href="#juegos" class="text-gray-800 dark:text-white hover:text-green-300 transition-colors">Juegos</a></li>
+                    <li><a href="#consejos" class="text-gray-800 dark:text-white hover:text-green-300 transition-colors">Consejos</a></li>
+                    <li>
+                        <button id="theme-toggle" class="ml-4 text-xl">
+                            <i class="fas fa-moon text-gray-800 dark:text-yellow-300"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto p-4 sm:p-8 pt-36">
+        <section id="inicio" class="hero-section text-center py-20 px-4 bg-gray-200 dark:bg-gray-800 rounded-3xl reveal">
+            <h2 class="text-4xl sm:text-5xl font-bold mb-4">Elige un Futuro Sostenible</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto opacity-80">Pequeñas acciones generan grandes cambios. Aprende cómo consumir de forma responsable y proteger nuestro planeta.</p>
+            <a href="#consejos" class="cta-button cta-pulse inline-block px-8 py-3 rounded-full text-white font-semibold shadow-lg">Empieza Ahora</a>
+        </section>
+
+        <section id="energias" class="info-section py-16 reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Fuentes de Energía</h2>
+            <p class="text-center max-w-2xl mx-auto mb-10">Conocer de dónde proviene la energía que utilizamos es el primer paso para tomar decisiones más conscientes.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-solar-panel text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Energía Solar</h3>
+                    <p class="text-sm opacity-80">Proviene del sol. Es una fuente limpia e inagotable que se utiliza para generar electricidad a través de paneles fotovoltaicos.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-fan text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Energía Eólica</h3>
+                    <p class="text-sm opacity-80">Se obtiene de la fuerza del viento. Los aerogeneradores la transforman en electricidad, siendo una opción renovable y eficiente.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-water text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Energía Hidráulica</h3>
+                    <p class="text-sm opacity-80">Se genera a partir del movimiento del agua. Las represas utilizan la caída del agua para mover turbinas y crear energía.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-volcano text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Energía Geotérmica</h3>
+                    <p class="text-sm opacity-80">Aprovecha el calor del interior de la Tierra para generar electricidad y sistemas de calefacción.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill" fill="currentColor"></path>
+            </svg>
+        </div>
+
+        <section id="contaminacion" class="info-section py-16 bg-secondary-section rounded-3xl reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Tipos de Contaminación</h2>
+             <p class="text-center max-w-2xl mx-auto mb-10">La contaminación es un problema global con múltiples facetas. Comprender sus tipos y orígenes es fundamental para combatirla de manera efectiva.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-smog text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Contaminación del Aire</h3>
+                    <p class="text-sm opacity-80">Producida por gases de fábricas y vehículos. Contribuye al cambio climático y a problemas respiratorios.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-faucet-drip text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Contaminación del Agua</h3>
+                    <p class="text-sm opacity-80">Causada por desechos industriales y plásticos que afectan ríos, lagos y océanos, dañando la vida acuática.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-trash-alt text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Contaminación del Suelo</h3>
+                    <p class="text-sm opacity-80">Ocurre por el uso excesivo de químicos, la acumulación de basura y la gestión inadecuada de residuos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="infraestructura" class="info-section py-16 reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Infraestructura Sostenible</h2>
+             <p class="text-center max-w-2xl mx-auto mb-10">La construcción de ciudades y sistemas de transporte con un enfoque ecológico es clave para reducir nuestra huella de carbono.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-building text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Edificios Verdes</h3>
+                    <p class="text-sm opacity-80">Utilizan materiales sostenibles, techos verdes y paneles solares para reducir el consumo de energía y agua.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-network-wired text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Redes Inteligentes</h3>
+                    <p class="text-sm opacity-80">Sistemas que optimizan el consumo de energía, gestionando la demanda en tiempo real e integrando fuentes renovables.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-train-subway text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Transporte Ecológico</h3>
+                    <p class="text-sm opacity-80">Incluye transporte público eficiente, carriles para bicicletas y la promoción de vehículos eléctricos.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider rotate-180">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill" fill="currentColor"></path>
+            </svg>
+        </div>
+
+        <section id="juegos" class="info-section py-16 bg-secondary-section rounded-3xl reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Juegos Ecológicos</h2>
+            <p class="text-center max-w-2xl mx-auto mb-10">¡Aprender a cuidar el planeta también puede ser divertido! Prueba nuestros juegos y demuestra tu conocimiento ecológico.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="game-container">
+                    <h3 class="text-2xl font-bold text-center">¡Ahorra Agua!</h3>
+                    <p class="text-center opacity-80 -mt-2 mb-2">¡Cierra los grifos que gotean antes de que se acabe el agua!</p>
+                    <div class="w-full mb-2">
+                        <p class="text-center text-sm text-blue-300">Nivel de Agua</p>
+                        <div class="w-full bg-gray-700 rounded-full h-4 border-2 border-blue-300 overflow-hidden">
+                            <div id="water-level" class="bg-blue-500 h-full rounded-full transition-all duration-300 ease-linear" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div id="faucet-board" class="grid grid-cols-3 gap-4 w-full max-w-xs aspect-square"></div>
+                    <p>Puntaje: <span id="water-score" class="font-bold text-lg text-green-300">0</span></p>
+                    <button id="start-water-btn" class="cta-button text-sm px-4 py-2 rounded-full text-white font-semibold shadow-lg">Empezar</button>
+                </div>
+
+                <div class="game-container">
+                     <h3 class="text-2xl font-bold text-center">¡Limpia el Planeta!</h3>
+                     <p class="text-center opacity-80 -mt-2 mb-2">¡Haz clic en la basura para limpiarla!</p>
+                     <div id="game-board" class="grid grid-cols-3 gap-2 bg-green-900/30 p-2 rounded-lg"></div>
+                     <div class="flex gap-6">
+                         <p>Puntaje: <span id="whack-score" class="font-bold text-lg">0</span></p>
+                         <p>Tiempo: <span id="time-left" class="font-bold text-lg">30</span></p>
+                     </div>
+                     <button id="start-whack-btn" class="cta-button text-sm px-4 py-2 rounded-full text-white font-semibold shadow-lg">Empezar</button>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="consejos" class="info-section py-16 reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Historias y Consejos</h2>
+            <p class="text-center max-w-2xl mx-auto mb-10">Inspírate con ejemplos de la vida real y encuentra más maneras de hacer la diferencia en tu día a día.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-hand-holding-heart text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Compras Conscientes</h3>
+                    <p class="text-sm opacity-80">Prioriza productos locales, de temporada y a granel. Busca empaques biodegradables o sin plástico.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-tree text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Movilidad Sostenible</h3>
+                    <p class="text-sm opacity-80">Usa bicicleta, camina o utiliza el transporte público. Si es indispensable, comparte el coche.</p>
+                </div>
+                <div class="card p-6 rounded-2xl">
+                    <i class="fas fa-seedling text-4xl mb-4 text-green-500"></i>
+                    <h3 class="font-bold text-xl mb-2">Huerto Urbano</h3>
+                    <p class="text-sm opacity-80">Cultiva tus propias hierbas, frutas y verduras en casa. Reduce el transporte de alimentos y come más sano.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+        <div class="social-icons flex justify-center gap-6 mb-4 text-2xl text-gray-400 dark:text-gray-500">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <p>Creado por Dante G. | Ayudante: Santino Viana | Grupo: Santy R., Leandro S., Ariel H. y Leon O.</p>
+        <p>EcoVida - Por un futuro más verde. &copy; 2024</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sanvyLoader = document.getElementById('sanvy-loader');
+            const ecoVidaLoader = document.getElementById('eco-vida-loader');
+            setTimeout(() => {
+                sanvyLoader.classList.add('hidden');
+                ecoVidaLoader.style.display = 'flex';
+                
+                const loaderTitle = document.getElementById('eco-vida-loader-title');
+                const titleText = "EcoVida";
+                if (loaderTitle.childElementCount === 0) {
+                    titleText.split('').forEach((char, index) => {
+                        const span = document.createElement('span');
+                        if (char === 'V') span.className = 'leaf';
+                        span.textContent = char;
+                        span.style.animationDelay = `${index * 0.15}s`;
+                        loaderTitle.appendChild(span);
+                    });
+                }
+
+                setTimeout(() => {
+                    ecoVidaLoader.classList.add('hidden');
+                    document.body.classList.remove('loading');
+                }, 2800);
+
+            }, 2000); 
+
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            themeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                if (document.documentElement.classList.contains('dark')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            });
+
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            window.showMessage = function(text) {
+                messageText.textContent = text;
+                messageBox.classList.add('show');
+            }
+
+            window.hideMessage = function() {
+                messageBox.classList.remove('show');
+            }
+            const faucetBoard = document.getElementById('faucet-board');
+            const waterBar = document.getElementById('water-level');
+            const waterScoreDisplay = document.getElementById('water-score');
+            const startWaterBtn = document.getElementById('start-water-btn');
+            
+            let waterScore = 0;
+            let currentWater = 100;
+            let gameInterval = null;
+            let faucetTimeout = null;
+            let cells = [];
+
+            function setupWaterBoard() {
+                faucetBoard.innerHTML = '';
+                cells = [];
+                for(let i=0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('faucet-cell');
+                    faucetBoard.appendChild(cell);
+                    cells.push(cell);
+                }
+            }
+
+            function showFaucet() {
+                if (document.querySelector('.faucet')) return; 
+
+                const emptyCells = cells.filter(cell => cell.innerHTML === '');
+                if (emptyCells.length === 0) return;
+
+                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                
+                const faucetEl = document.createElement('div');
+                faucetEl.textContent = '🚰';
+                faucetEl.classList.add('faucet', 'dripping');
+                
+                faucetEl.addEventListener('click', () => {
+                    waterScore++;
+                    waterScoreDisplay.textContent = waterScore;
+                    currentWater = Math.min(100, currentWater + 5);
+                    randomCell.innerHTML = '';
+                    clearTimeout(faucetTimeout);
+                    showFaucet(); 
+                }, { once: true });
+                
+                randomCell.appendChild(faucetEl);
+
+                faucetTimeout = setTimeout(() => {
+                    if (randomCell.contains(faucetEl)) {
+                        randomCell.innerHTML = '';
+                    }
+                }, 2000); 
+            }
+
+            function startWaterGame() {
+                waterScore = 0;
+                currentWater = 100;
+                waterScoreDisplay.textContent = waterScore;
+                startWaterBtn.disabled = true;
+
+                clearInterval(gameInterval);
+                clearTimeout(faucetTimeout);
+                setupWaterBoard();
+
+                gameInterval = setInterval(() => {
+                    currentWater -= 1.5; 
+                    waterBar.style.width = `${currentWater}%`;
+                    
+                    if (!document.querySelector('.faucet')) {
+                        showFaucet();
+                    }
+
+                    if (currentWater <= 0) {
+                        clearInterval(gameInterval);
+                        clearTimeout(faucetTimeout);
+                        showMessage(`¡Se acabó el agua! Puntaje: ${waterScore}`);
+                        startWaterBtn.disabled = false;
+                        faucetBoard.innerHTML = '';
+                        setupWaterBoard(); 
+                        waterBar.style.width = '100%';
+                    }
+                }, 300);
+            }
+
+            startWaterBtn.addEventListener('click', startWaterGame);
+            const gameBoard = document.getElementById('game-board');
+            const whackScoreDisplay = document.getElementById('whack-score');
+            const timeLeftDisplay = document.getElementById('time-left');
+            const startWhackBtn = document.getElementById('start-whack-btn');
+
+            const pollutants = ['🥤', '🚬', '🗑️', '☣️'];
+            let whackScore = 0;
+            let timeLeft = 30; 
+            let pollutantInterval = null;
+            let timerInterval = null;
+
+            function createGameBoard() {
+                gameBoard.innerHTML = '';
+                for (let i = 0; i < 9; i++) {
+                    const hole = document.createElement('div');
+                    hole.classList.add('hole');
+                    gameBoard.appendChild(hole);
+                }
+            }
+
+            function randomPollutant() {
+                const holes = document.querySelectorAll('#game-board .hole');
+                holes.forEach(hole => hole.innerHTML = '');
+                
+                const randomIndex = Math.floor(Math.random() * holes.length);
+                const randomPollutantIcon = pollutants[Math.floor(Math.random() * pollutants.length)];
+                
+                const pollutantEl = document.createElement('div');
+                pollutantEl.classList.add('pollutant');
+                pollutantEl.textContent = randomPollutantIcon;
+                pollutantEl.addEventListener('click', () => { 
+                    whackScore++;
+                    whackScoreDisplay.textContent = whackScore;
+                    pollutantEl.remove();
+                });
+
+                holes[randomIndex].appendChild(pollutantEl);
+            }
+
+            function startGameWhack() {
+                whackScore = 0;
+                timeLeft = 30;
+                whackScoreDisplay.textContent = whackScore;
+                timeLeftDisplay.textContent = timeLeft;
+                startWhackBtn.disabled = true;
+
+                pollutantInterval = setInterval(randomPollutant, 900);
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timeLeftDisplay.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(pollutantInterval);
+                        clearInterval(timerInterval);
+                        showMessage(`¡Juego terminado! Tu puntaje: ${whackScore}`);
+                        startWhackBtn.disabled = false;
+                        document.querySelectorAll('#game-board .hole').forEach(h => h.innerHTML = '');
+                    }
+                }, 1000);
+            }
+
+            startWhackBtn.addEventListener('click', startGameWhack);
+            setupWaterBoard();
+            createGameBoard();
+        });
+    </script>
+</body>
+</html>
